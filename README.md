@@ -8,8 +8,28 @@ The endpoints and payload shapes documented here were extracted by inspecting th
 
 ## Packages
 
-- TypeScript/npm: `unmsm-sum-api`
-- Python/PyPI: `unmsm-sum-api`, imported as `unmsm_sum_api`
+- TypeScript/npm: [`unmsm-sum-api`](https://www.npmjs.com/package/unmsm-sum-api)
+- Python/PyPI: [`unmsm-sum-api`](https://pypi.org/project/unmsm-sum-api/), imported as `unmsm_sum_api`
+
+## Installation
+
+Install the TypeScript package from npm:
+
+```sh
+npm install unmsm-sum-api
+```
+
+Install the Python package from PyPI:
+
+```sh
+pip install unmsm-sum-api
+```
+
+With `uv`:
+
+```sh
+uv add unmsm-sum-api
+```
 
 ## TypeScript Usage
 
