@@ -1,0 +1,341 @@
+openapi: 3.1.0
+info:
+  title: UNMSM SUM API
+  version: 0.1.0
+  description: |
+    Unofficial specification based on observed UNMSM SUM system endpoints.
+    This project is not affiliated with, endorsed by, or maintained by Universidad Nacional Mayor de San Marcos.
+servers:
+  - url: https://sum2.unmsm.edu.pe/sumapi
+security:
+  - bearerAuth: []
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      security: []
+      summary: Authenticates a user and returns session tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /alumno/info:
+    get:
+      operationId: getStudentInfo
+      summary: Returns general information for the authenticated student.
+      responses:
+        '200':
+          $ref: '#/components/responses/StudentInfoResponse'
+  /alumno/mostrarInformacionPersonalFormulario:
+    get:
+      operationId: getPersonalInformation
+      summary: Returns personal information registered in the student's form.
+      responses:
+        '200':
+          $ref: '#/components/responses/PersonalInformationResponse'
+  /alumno/mostrarHistorialAcademicoXsemestre:
+    get:
+      operationId: getAcademicHistory
+      summary: Returns academic history grouped by semester.
+      responses:
+        '200':
+          $ref: '#/components/responses/AcademicHistoryResponse'
+  /matricula/informacionMatricula:
+    get:
+      operationId: getEnrollmentInformation
+      summary: Returns enrollment period and status information.
+      responses:
+        '200':
+          $ref: '#/components/responses/EnrollmentInformationResponse'
+  /matricula/mostrarMatricula:
+    get:
+      operationId: getEnrollment
+      summary: Returns the current enrollment, if available.
+      responses:
+        '200':
+          $ref: '#/components/responses/EnrollmentResponse'
+  /matricula/obtenerProgramacionCursos:
+    get:
+      operationId: getCourseSchedule
+      summary: Returns available course schedules and sections.
+      responses:
+        '200':
+          $ref: '#/components/responses/CourseScheduleResponse'
+  /alumno/tutoria:
+    get:
+      operationId: getTutoring
+      summary: Returns student tutoring records, if available.
+      responses:
+        '200':
+          $ref: '#/components/responses/TutoringResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    StudentInfoResponse:
+      description: General student information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StudentInfo'
+    PersonalInformationResponse:
+      description: Student personal information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PersonalInformationResponse'
+    AcademicHistoryResponse:
+      description: Academic history by semester.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AcademicHistoryResponse'
+    EnrollmentInformationResponse:
+      description: Enrollment process information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EnrollmentInformationResponse'
+    EnrollmentResponse:
+      description: Current enrollment.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NullableDataResponse'
+    CourseScheduleResponse:
+      description: Course schedule.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CourseScheduleResponse'
+    TutoringResponse:
+      description: Student tutoring records.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TutoringResponse'
+  schemas:
+    LoginRequest:
+      type: object
+      required: [username, password]
+      additionalProperties: true
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      required: [username, fullName, token, refreshToken, createAt, expirationDate]
+      additionalProperties: true
+      properties:
+        username:
+          type: string
+        fullName:
+          type: string
+        token:
+          type: string
+        refreshToken:
+          type: string
+        createAt:
+          type: string
+        expirationDate:
+          type: string
+    BaseResponse:
+      type: object
+      required: [mensaje, codigo]
+      additionalProperties: true
+      properties:
+        mensaje:
+          type: string
+        codigo:
+          type: string
+    NullableDataResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data: true
+    StudentInfo:
+      type: object
+      required: [apePaterno, apeMaterno, nombre, codAlumno]
+      additionalProperties: true
+      properties:
+        apePaterno: { type: string }
+        apeMaterno: { type: string }
+        nombre: { type: string }
+        codFacultad: { type: integer }
+        desFacultad: { type: string }
+        foto: { type: string }
+        sexo: { type: string }
+        correoInstitucional: { type: string }
+        dni: { type: string }
+        codAlumno: { type: string }
+        codEscuela: { type: integer }
+        desEscuela: { type: string }
+        codEspecialidad: { type: integer }
+        desEspecialidad: { type: string }
+        codPlan: { type: string }
+        desPlan: { type: string }
+        ponderado: { type: number }
+        actualizoFormulario: { type: boolean }
+        periodo: { type: string }
+        urlFoto: { type: string }
+        codPermanencia: { type: string }
+        desPermanencia: { type: string }
+        codSituacion: { type: string }
+        desSituacion: { type: string }
+        regimen: { type: string }
+        egresadoEG: { type: string }
+        anioIngreso: { type: integer }
+        matricula: true
+    PersonalInformationResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              additionalProperties: true
+    AcademicCourse:
+      type: object
+      required: [codCurso, ciclo, desAsignatura, desCalificacion, numCreditaje, valCalificacionFinal]
+      additionalProperties: true
+      properties:
+        codCurso: { type: string }
+        ciclo: { type: integer }
+        desAsignatura: { type: string }
+        desCalificacion: { type: string }
+        codTipoActa: { type: string }
+        numCreditaje: { type: number }
+        valCalificacionFinal: { type: number }
+        codPlan: { type: string }
+        codSeccion: { type: string }
+        numActa: { type: string }
+        tipoAsignatura: { type: string }
+        numResConv: true
+    AcademicSemester:
+      type: object
+      required: [codSemestre, asignatura]
+      additionalProperties: true
+      properties:
+        codSemestre: { type: string }
+        asignatura:
+          type: array
+          items:
+            $ref: '#/components/schemas/AcademicCourse'
+    AcademicHistoryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/AcademicSemester'
+    EnrollmentInformationResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              additionalProperties: true
+              properties:
+                codSemestre: { type: string }
+                fechaDB: { type: string }
+                fecIniMatInternet: { type: string }
+                fecFinMatInternet: { type: string }
+                mensajeMat: { type: string }
+                indMatHabilitada: { type: boolean }
+                matricula: true
+    Schedule:
+      type: object
+      required: [codHorario, horaInicio, horaFin, dia]
+      additionalProperties: true
+      properties:
+        codHorario: { type: integer }
+        horaInicio: { type: string }
+        horaFin: { type: string }
+        dia: { type: string }
+    Section:
+      type: object
+      required: [codSeccion, codTurno, canTopeAlumnos, canAlumMatriculados, horarios]
+      additionalProperties: true
+      properties:
+        codSeccion: { type: integer }
+        codTurno: { type: string }
+        canTopeAlumnos: { type: integer }
+        canAlumMatriculados: { type: integer }
+        codTipoHorAsignatura: { type: string }
+        codDocente: { type: string }
+        nomDocente: { type: string }
+        apePaterno: { type: string }
+        apeMaterno: { type: string }
+        codAula: { type: string }
+        horarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+    CourseScheduleItem:
+      type: object
+      required: [codAsignatura, desAsignatura, seccion]
+      additionalProperties: true
+      properties:
+        codAsignatura: { type: string }
+        desAsignatura: { type: string }
+        canHorasTeoria: { type: integer }
+        canHorasPractica: { type: integer }
+        canHorasLaboratorio: { type: integer }
+        numCreditaje: { type: number }
+        indRegimen: { type: string }
+        seccion:
+          type: array
+          items:
+            $ref: '#/components/schemas/Section'
+    CourseScheduleGroup:
+      type: object
+      required: [asignatura]
+      additionalProperties: true
+      properties:
+        asignatura:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseScheduleItem'
+    CourseScheduleResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CourseScheduleGroup'
+    TutoringResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
