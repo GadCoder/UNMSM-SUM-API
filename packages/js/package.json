@@ -1,10 +1,11 @@
 {
   "name": "unmsm-sum-api",
   "version": "0.1.0",
-  "description": "Cliente no oficial para endpoints observados del sistema SUM de la UNMSM.",
+  "description": "Unofficial client for observed UNMSM SUM system endpoints.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -14,6 +15,25 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GadCoder/UNMSM-SUM-API.git",
+    "directory": "packages/js"
+  },
+  "homepage": "https://github.com/GadCoder/UNMSM-SUM-API#readme",
+  "bugs": {
+    "url": "https://github.com/GadCoder/UNMSM-SUM-API/issues"
+  },
+  "keywords": [
+    "unmsm",
+    "sum",
+    "portal-unmsm",
+    "sdk",
+    "api-client",
+    "typescript",
+    "zod"
+  ],
+  "author": "GadCoder <71470937+GadCoder@users.noreply.github.com>",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit"
@@ -27,5 +47,8 @@
   "engines": {
     "node": ">=18"
   },
-  "license": "MIT"
+  "license": "GPL-3.0-only",
+  "publishConfig": {
+    "access": "public"
+  }
 }
