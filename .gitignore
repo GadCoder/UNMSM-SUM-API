@@ -1,0 +1,9 @@
+endpoints_bk/
+.DS_Store
+
+node_modules/
+dist/
+
+.venv/
+__pycache__/
+*.py[cod]
